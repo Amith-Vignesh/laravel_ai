@@ -1,28 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
+use App\AI\Chat;
 use Illuminate\Support\Facades\Route;
 
+//Example Route to use OpenAI
 Route::get('/', function () {
 
-    $response = Http::withToken(config('services.openai.secret'))
-        ->post(
-            'https://api.openai.com/v1/chat/completions',
-            [
-                "model" => "gpt-4o-mini",
-                "messages" => [
-                    [
-                        "role" => "system",
-                        "content" => "You are a helpful assistant."
-                    ],
-                    [
-                        "role" => "user",
-                        "content" => "Write a haiku that explains the concept of recursion."
-                    ]
-                ]
-            ]
-        )->json();
+    $chat = new Chat();
 
-    // Dump the response for debugging
-    dd($response);
-});
+    $haiku = $chat
+    ->systemMessage('You are a AI for laravel concepts, Skilled in explaining complex programming ')
+    ->send('write a haiku about ai');
+
+    $haiku2 = $chat->reply('Good, give me much longer than a haiku');
+
+    return view('welcome', ['response' => $haiku2]);
+}) ;
