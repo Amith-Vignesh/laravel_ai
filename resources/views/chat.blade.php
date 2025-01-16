@@ -21,10 +21,21 @@
 
         <!-- Header -->
         <div class="top">
-            <img src="{{ asset('img/man.jpg') }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
-            <div>
-                <p>Amith</p>
-                <small>Online</small>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <!-- Home Button -->
+                <button onclick="location.href='/dashboard'"
+                        style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                    Home
+                </button>
+
+                <!-- User Info -->
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ asset('img/man.jpg') }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                    <div>
+                        <p>Amith</p>
+                        <small>Online</small>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- End Header -->
@@ -105,6 +116,5 @@
         });
     });
 </script>
-
 
 </html>

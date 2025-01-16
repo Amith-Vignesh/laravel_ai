@@ -1,25 +1,28 @@
 <?php
 
-use App\AI\Chat;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProfileController;
+require __DIR__.'/auth.php';
 
-//Example Route to use OpenAI
+
 Route::get('/', function () {
-
-    $chat = new Chat();
-
-    $haiku = $chat
-        ->systemMessage('You are a AI for laravel concepts, Skilled in explaining complex programming ')
-        ->send('write a haiku about ai');
-
-    $haiku2 = $chat->reply('Good, give me much longer than a haiku');
-
-    return view('welcome', ['response' => $haiku2]);
+    return view('welcome');
 });
 
-Route::get('/chat', function () {
-    return view('chat');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/chat', function () {
+        return view('chat');
+    });
+    Route::post('/openai', [ChatController::class, '__invoke']);
 });
 
-Route::post('/openai', [ChatController::class, '__invoke']);
+
+
