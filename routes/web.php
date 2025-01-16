@@ -1,28 +1,28 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProfileController;
+require __DIR__.'/auth.php';
+
 
 Route::get('/', function () {
-
-    $response = Http::withToken(config('services.openai.secret'))
-        ->post(
-            'https://api.openai.com/v1/chat/completions',
-            [
-                "model" => "gpt-4o-mini",
-                "messages" => [
-                    [
-                        "role" => "system",
-                        "content" => "You are a helpful assistant."
-                    ],
-                    [
-                        "role" => "user",
-                        "content" => "Write a haiku that explains the concept of recursion."
-                    ]
-                ]
-            ]
-        )->json();
-
-    // Dump the response for debugging
-    dd($response);
+    return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/chat', function () {
+        return view('chat');
+    });
+    Route::post('/openai', [ChatController::class, '__invoke']);
+});
+
+
+
