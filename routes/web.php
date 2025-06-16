@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ProfileController;
+
 require __DIR__.'/auth.php';
 
 
@@ -22,7 +24,11 @@ Route::middleware('auth')->group(function () {
         return view('chat');
     });
     Route::post('/openai', [ChatController::class, '__invoke']);
+
+    Route::get('/file-upload', [FileController::class, 'index'])->name('file.upload.form');
+    Route::post('/file-upload', [FileController::class, 'store'])->name('file.upload');
+    Route::get('/file/download/{fileId}', [FileController::class, 'download'])->name('file.download');
+
+    Route::delete('/file/delete/{fileId}', [FileController::class, 'destroy'])->name('file.destroy');
+
 });
-
-
-
